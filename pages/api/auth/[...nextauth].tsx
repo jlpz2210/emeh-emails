@@ -1,4 +1,4 @@
-import NextAuth, { Account, Session, SessionStrategy } from "next-auth";
+import NextAuth, { Account, Profile, Session, SessionStrategy, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import GoogleProvider from 'next-auth/providers/google'
 
@@ -9,7 +9,14 @@ interface JWTProps {
 
 interface SessionProps {
     session: Session
+    user: User
     token: JWT
+}
+
+interface SignInProps {
+    user: User
+    account: Account | null
+    profile?: Profile | undefined
 }
 
 export const authOptions = {
@@ -28,18 +35,18 @@ export const authOptions = {
         })
     ],
     session: {
-        strategy: "jwt" as SessionStrategy
+        strategy: "jwt" as SessionStrategy,
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({token, account}: JWTProps) {
-            if(account) token = Object.assign({}, token, {access_token: account.access_token})
+            if(account) {
+                token.access_token = account.access_token
+            }
             return token
         },
-        async session({session, token}: SessionProps) {
-            if(session){
-                session = Object.assign({}, session, {access_token: token.access_token})
-            }
+        async session({session,user, token}: SessionProps) {
+            session.access_token = token.access_token
             return session
         }
     }
