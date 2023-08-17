@@ -46,7 +46,7 @@ export const authOptions = {
             return token
         },
         async session({session,user, token}: SessionProps) {
-            session.access_token = token.access_token
+            session.access_token = token.access_token as string
             return session
         }
     }
