@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.16",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@tanstack/react-table": "^8.9.1",
     "@types/node": "20.2.5",
